@@ -1,22 +1,21 @@
 import streamlit as st
-import os
-from groq import Groq
+import google.generativeai as genai
 
-# CLÉ API INTÉGRÉE
-GROQ_API_KEY = "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"
+# TA CLÉ GEMINI (Remplace le texte entre guillemets par ta vraie clé)
+GEMINI_API_KEY = "AIzaSyB38Z5b33LSLSJGGbm8jjlzNE6M_s315-o"
 
-# Configuration de l'interface
+# Configuration de la page
 st.set_page_config(page_title="ZENITSU AI", page_icon="⚡")
 
 def main():
-    # Initialisation du client Groq
-    client = Groq(api_key=GROQ_API_KEY)
+    # Configuration de Gemini
+    genai.configure(api_key=AIzaSyB38Z5b33LSLSJGGbm8jjlzNE6M_s315-o)
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
-    st.title("⚡ ZENITSU AI")
-    st.subheader("Souffle de la Foudre, premier mouvement !")
-    st.info("Statut : Connecté avec succès, Jeffrey.")
+    st.title("👽Jeffrey AI")
+    st.info("jeff_ai.petit.mais.puissant.")
 
-    # Gestion de l'historique
+    # Historique de chat
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -26,27 +25,23 @@ def main():
             st.markdown(m["content"])
 
     # Zone de saisie
-    if prompt := st.chat_input("Parle à Zenitsu..."):
+    if prompt := st.chat_input("Dis-moi quelque chose..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
             try:
-                # MISE À JOUR : Modèle Llama 3.3 (plus récent et fonctionnel)
-                chat = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[
-                        {"role": "system", "content": "Tu es Zenitsu Agatsuma. Tu es peureux mais loyal. Tu appelles l'utilisateur Jeffrey."},
-                        {"role": "user", "content": prompt}
-                    ]
-                )
-                response = chat.choices[0].message.content
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                # Ici, c'est l'IA pure qui génère la réponse
+                response = model.generate_content(f"Tu es Zenitsu. Réponds à Jeffrey de façon naturelle : {prompt}")
+                full_response = response.text
+                
+                st.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
             except Exception as e:
-                st.error(f"Erreur : {e}")
+                st.error(f"Erreur Gemini : {e}")
 
 if __name__ == "__main__":
     main()
+
 
