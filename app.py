@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from groq import Groq
 
-# CLÉ API INTÉGRÉE (Plus besoin de réglages dans Render)
+# CLÉ API INTÉGRÉE
 GROQ_API_KEY = "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"
 
 # Configuration de l'interface
@@ -16,16 +16,16 @@ def main():
     st.subheader("Souffle de la Foudre, premier mouvement !")
     st.info("Statut : Connecté avec succès, Jeffrey.")
 
-    # Gestion de l'historique de discussion
+    # Gestion de l'historique
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Affichage des messages précédents
+    # Affichage des messages
     for m in st.session_state.messages:
         with st.chat_message(m["role"]):
             st.markdown(m["content"])
 
-    # Zone de saisie utilisateur
+    # Zone de saisie
     if prompt := st.chat_input("Parle à Zenitsu..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
@@ -33,10 +33,11 @@ def main():
 
         with st.chat_message("assistant"):
             try:
+                # MISE À JOUR : Modèle Llama 3.3 (plus récent et fonctionnel)
                 chat = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="llama-3.3-70b-versatile",
                     messages=[
-                        {"role": "system", "content": "Tu es Zenitsu Agatsuma. Tu es peureux mais protecteur. Tu appelles l'utilisateur Jeffrey."},
+                        {"role": "system", "content": "Tu es Zenitsu Agatsuma. Tu es peureux mais loyal. Tu appelles l'utilisateur Jeffrey."},
                         {"role": "user", "content": prompt}
                     ]
                 )
@@ -44,7 +45,8 @@ def main():
                 st.markdown(response)
                 st.session_state.messages.append({"role": "assistant", "content": response})
             except Exception as e:
-                st.error(f"Erreur de connexion : {e}")
+                st.error(f"Erreur : {e}")
 
 if __name__ == "__main__":
     main()
+
